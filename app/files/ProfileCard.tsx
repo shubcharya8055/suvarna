@@ -102,20 +102,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, onDelete }) => {
 						</p>
 					</div>
 				</div>
-
-				{/* AI Insight Section */}
-				{profile.aiInsight && (
-					<div className="pt-2">
-						<div className="bg-purple-50 border border-purple-100 p-3 rounded-lg relative">
-							<div className="absolute -top-2 -right-2 bg-white text-purple-600 rounded-full p-1 border border-purple-100 shadow-sm">
-								<Sparkles size={14} />
-							</div>
-							<p className="text-sm text-purple-900 italic serif-font">
-								"{profile.aiInsight}"
-							</p>
-						</div>
-					</div>
-				)}
 			</CardContent>
 		</Card>
 	);
