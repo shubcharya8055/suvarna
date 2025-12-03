@@ -53,5 +53,12 @@ export interface Profile {
 	contactNumber: string;
 	occupation: string;
 	address: string;
+	submitter_name?: string;
+	submitter_mobile?: string;
 }
 
+export interface Submitter {
+	submitter_name: string;
+	submitter_mobile: string;
+	record_count: number;
+}
