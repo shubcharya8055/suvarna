@@ -23,59 +23,6 @@ const App: React.FC = () => {
 	const [submitterName, setSubmitterName] = useState<string>("");
 	const [submitterMobile, setSubmitterMobile] = useState<string>("");
 	const [showForm, setShowForm] = useState<boolean>(false);
-	const [loadingSubmitter, setLoadingSubmitter] = useState<boolean>(true);
-
-	// Load submitter info from Supabase on mount
-	// Check if there's a recent session stored in the backend
-	useEffect(() => {
-		const loadSubmitterFromBackend = async () => {
-			if (!supabase) {
-				setLoadingSubmitter(false);
-				return;
-			}
-
-			try {
-				// Try to get the most recent submitter session from submitter_sessions table
-				const { data: sessions, error } = await supabase
-					.from("submitter_sessions")
-					.select("submitter_name, submitter_mobile")
-					.order("last_active_at", { ascending: false })
-					.limit(1)
-					.single();
-
-				if (!error && sessions) {
-					setSubmitterName(sessions.submitter_name);
-					setSubmitterMobile(sessions.submitter_mobile);
-					setShowForm(true);
-				} else {
-					// Fallback: Check profiles table for most recent submission
-					const { data: recentProfile } = await supabase
-						.from("profiles")
-						.select("submitter_name, submitter_mobile")
-						.not("submitter_name", "is", null)
-						.not("submitter_mobile", "is", null)
-						.order("id", { ascending: false })
-						.limit(1)
-						.single();
-
-					if (
-						recentProfile?.submitter_name &&
-						recentProfile?.submitter_mobile
-					) {
-						setSubmitterName(recentProfile.submitter_name);
-						setSubmitterMobile(recentProfile.submitter_mobile);
-						setShowForm(true);
-					}
-				}
-			} catch (err) {
-				console.log("No existing submitter session found", err);
-			} finally {
-				setLoadingSubmitter(false);
-			}
-		};
-
-		loadSubmitterFromBackend();
-	}, []);
 
 	// Handle Auth Session
 	useEffect(() => {
@@ -267,11 +214,7 @@ const App: React.FC = () => {
 					</TabsList>
 
 					<TabsContent value="form" className="animate-fade-in-up">
-						{loadingSubmitter ? (
-							<div className="flex justify-center items-center h-64">
-								<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-700"></div>
-							</div>
-						) : !showForm ? (
+						{!showForm ? (
 							<>
 								<div className="text-center mb-8">
 									<Flower className="mx-auto text-amber-600 mb-2 h-10 w-10 opacity-80" />
